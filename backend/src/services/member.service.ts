@@ -1,9 +1,15 @@
 import { ErrorCodeEnum } from "../enums/error-code.enum";
-import { Roles } from "../enums/role.enums";
+import { Roles, RoleType } from "../enums/role.enums";
 import MemberModel from "../models/member.model";
 import RoleModel from "../models/roles-permission.model";
 import WorkspaceModel from "../models/workspace.model";
 import { NotFoundException, UnauthorizedException } from "../utils/appError";
+
+type PopulatedMemberRole = {
+    role: {
+        name: RoleType;
+    };
+};
 
 export const getMemberRoleInWorkspace = async (userId:string,workspaceId:string) => {
     const workspace = await WorkspaceModel.findById(workspaceId);
@@ -11,7 +17,8 @@ export const getMemberRoleInWorkspace = async (userId:string,workspaceId:string)
         throw new NotFoundException("Workspace not found");
     }
     console.log("[DEBUG] Checking membership for:", { userId, workspaceId });
-    const member = await MemberModel.findOne({userId,workspaceId}).populate("role");
+    const member = await MemberModel.findOne({userId,workspaceId})
+        .populate<PopulatedMemberRole>("role");
     if(!member){
         throw new UnauthorizedException("You are not a member of this workspace",
             ErrorCodeEnum.ACCESS_UNAUTHORIZED,

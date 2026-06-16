@@ -1,5 +1,4 @@
 import {
-  ChevronDown,
   Loader,
   MoreHorizontal,
   Trash2,
@@ -49,7 +48,6 @@ import {
 } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import { Permissions } from "@/constant";
-import { useState } from "react";
 
 const AllMembers = () => {
   const { user, hasPermission } = useAuthContext();

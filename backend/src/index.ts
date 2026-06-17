@@ -115,11 +115,12 @@ app.use(`${BASE_PATH}/task`,isAuthenticated,taskRoutes);
 // Global error handler - MUST be last
 app.use(errorHandler);
 
-app.listen(config.PORT, async()=>{
-    console.log(`Server is running on port ${config.PORT}`);
-    console.log(`Environment: ${config.NODE_ENV}`);
-    console.log(`Frontend Origin: ${config.FRONTEND_ORIGIN}`);
-    await connectDatabase();
+connectDatabase().then(() => {
+    app.listen(config.PORT, () => {
+        console.log(`Server is running on port ${config.PORT}`);
+        console.log(`Environment: ${config.NODE_ENV}`);
+        console.log(`Frontend Origin: ${config.FRONTEND_ORIGIN}`);
+    });
 });
 
 // Handle unhandled promise rejections

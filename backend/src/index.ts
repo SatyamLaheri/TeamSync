@@ -18,6 +18,14 @@ import { errorHandler } from "./middlewares/errorHandlers.middleware";
 
 const app = express();
 const BASE_PATH = config.BASE_PATH;
+const allowedOrigins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "https://team-sync-phi.vercel.app",
+    "https://teamsync-phi.vercel.app",
+    "https://team-sync-sooty.vercel.app",
+    config.FRONTEND_ORIGIN
+].filter((origin): origin is string => Boolean(origin));
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
@@ -27,12 +35,6 @@ app.use(passport.initialize());
 
 // Add CORS headers for preflight requests
 app.use((req, res, next) => {
-    const allowedOrigins = [
-        'http://localhost:3000',
-        'http://localhost:5173',
-        'https://team-sync-phi.vercel.app'
-    ];
-    
     const origin = req.headers.origin;
     if (origin && allowedOrigins.includes(origin)) {
         res.header('Access-Control-Allow-Origin', origin);
@@ -50,13 +52,7 @@ app.use((req, res, next) => {
 });
 
 app.use(cors({
-    origin: [
-        "http://localhost:3000",
-        "http://localhost:5173", 
-        "https://team-sync-phi.vercel.app",
-        "https://teamsync-phi.vercel.app",
-        config.FRONTEND_ORIGIN
-    ].filter(Boolean),
+    origin: allowedOrigins,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "Cookie", "Set-Cookie", "Origin", "Accept"],

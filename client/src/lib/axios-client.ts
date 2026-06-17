@@ -94,6 +94,7 @@ API.interceptors.response.use(
 
     const customError: CustomError = {
       ...error,
+      message: data?.message || error.message,
       errorCode: data?.errorCode || "UNKNOWN_ERROR",
     };
 
